@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+</head>
+<script>
+    <!--先获取所有已经签到的人员信息-->
+    /*刷新所有已经签到的人员*/
+    $(function(){
+        $.get("getAll",function(data){
+            var tmp=eval(data);
+            if(tmp.length!=0) {
+                var str = "";
+                 j=0;
+                for (var i = 0; i < tmp.length; i++) {
+                    str += "<a href='javascript:void(0)' onclick='method1(\""+tmp[i].images+"\")'>"+
+                            "<img id="+"p"+j+" style='width: 230px;height: 230px;border-radius: 50%;position: absolute; z-index: 100;display: none ' src='" + tmp[i].images + "'>"+"</a>";
+                    j++;
+                }
+                $("#div").append(str);
+            }
+        });
+    });
+</script>
+<body>
+<input type="hidden" >
+<div id="Layer1" style="position:absolute;width:100%; height:100%; z-index:-1">
+    <img src="images/choujiang.png" height="100%" width="100%"/>
+</div>
+
+
+
+<img id="tmp" style='width: 230px;height: 230px;border-radius: 50%;position: absolute; z-index: 100;top: 44%;left: 41%; ' src='images/余小爱.jpg'>
+<div style="width: 150px;height: 150px;position: absolute;top: 44%;left: 41%;" id="div"></div>
+<a href="javascript:void(0)" onclick="method2(this)" id="start" style="font-size: 35px;color: red;position: absolute;top: 80%;left: 48%;">开始</a>
+
+<div id="div2" style="width: 250px;height: 200px;position: absolute;top: 48%;left: 60%;background-color: azure;display: none" onclick="method4(this)">
+<div style="font-size: 25px;position: absolute;left: 30px;top: 35px;;">姓名：<span id="name"></span></div>
+    <div style="font-size: 25px;position: absolute;left: 30px;top: 110px;">桌号：<span id="table"></span></div>
+</div>
+</body>
+
+<script>
+    function method4(obj){
+        $(obj).css("display","none");
+    }
+    tmp="#tmp";
+    function method1(images){
+        /*显示用户的具体信息*/
+        $("#div2").css("display","block");
+        /*根据用户的图片姓名查找用户的信息*/
+        $.get("getMessageByPicture",{"images":images},function(data){
+            console.log(data);
+            var obj = JSON.parse(data);
+            /*将用户的姓名以及座位号动态加载到页面上*/
+            $("#name")[0].innerHTML=obj.name;
+            $("#table")[0].innerHTML=obj.seat;
+        });
+    }
+
+    function method3(){
+        /*首先要获取当前的人数  j*/
+        /*获取一个随机数  1-j之间 */
+        var i=randomFrom(0,j-1);
+        console.log(tmp);
+        $(tmp).css("display","none");
+        tmp="#p"+i;
+        $(tmp).css("display","block");
+    }
+
+    function randomFrom(lowerValue,upperValue)
+    {
+        return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
+    }
+function method2(obj){
+    var tmp=obj.innerHTML;
+    if(tmp=="开始"){
+        $("#div2").css("display","none");
+        obj.innerHTML="停止";
+        a=setInterval("method3()",50);
+    }else{
+        obj.innerHTML="开始";
+        clearInterval(a);
+       /* $("#div2").css("display","block");*/
+    }
+
+}
+
+</script>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.ExcelMapper">
+
+    <insert id="insertExcel" >
+              insert into
+          tabletwo (name,idcard,address,culture,worktime,telephone,companyname,companycode,companyaddress,companytelephone,
+        companyperson,timeofwork,professionname,wantprofession,wantprofessionlevel)
+        values
+        <foreach collection="list" separator="," item="tmp">
+            (#{tmp.name},#{tmp.idcard},#{tmp.address},#{tmp.culture},#{tmp.worktime},#{tmp.telephone},#{tmp.companyname}
+            ,#{tmp.companycode},#{tmp.companyaddress},#{tmp.companytelephone},#{tmp.companyperson},#{tmp.timeofwork},#{tmp.professionname},
+            #{tmp.wantprofession},#{tmp.wantprofessionlevel})
+        </foreach>
+    </insert>
+
+    <select id="login" resultType="com.test.bean.Message">
+        select * from message where name=#{name}
+    </select>
+
+    <update id="changestatus">
+        update message set status=1,tmp=1 where id=#{id}
+    </update>
+
+    <select id="getTmp" resultType="com.test.bean.Message">
+        select * from message where tmp=1
+    </select>
+
+    <update id="changetmp">
+        update message set tmp=0 where id=#{id}
+    </update>
+
+    <select id="getAll" resultType="com.test.bean.Message">
+        select * from message where status=1
+    </select>
+
+    <select id="getMessageByPicture" resultType="com.test.bean.Message">
+        select * from message where images=#{images}
+    </select>
+    </mapper>
